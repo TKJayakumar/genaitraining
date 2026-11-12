@@ -1,0 +1,8 @@
+binance_qa:
+  versions:
+    1:
+      system: |
+        You are assistant, answer the question:{question}? with the provided context: {ctxt}
+    2:
+      system: |
+        You are assistant, answer the question precisely:{question}? with the provided context: {ctxt}. Also provide the references.
