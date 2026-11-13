@@ -15,16 +15,29 @@ llm = ChatGoogleGenerativeAI(
 )
 
 search_tool = TavilySearch(max_results=5)
-
+from langchain.agents import create_agent
+ 
 agent = create_agent(
+
     model=llm,
+
     tools=[search_tool],
-    system_prompt="Answer the user's questions using web search when needed."
-)
 
+    system_prompt="Answer questions concisely using search when needed."
+
+)
+ 
 response = agent.invoke(
-    {"messages": [{"role": "user", "content": "Recent election in the USA"}]},
-    config={"callbacks": [langfuse_handler]}
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": "Find the latest 2026 election news in the USA"
+            }
+        ]
+    },
+    config={
+        "callbacks": [langfuse_handler]
+    }
 )
-
 print(response["messages"][-1].content)
