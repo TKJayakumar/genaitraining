@@ -1,0 +1,30 @@
+
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_tavily import TavilySearch
+from langchain.agents import create_agent
+from langfuse.langchain import CallbackHandler
+
+load_dotenv()
+
+langfuse_handler = CallbackHandler()
+
+llm = ChatGoogleGenerativeAI(
+    model="gemini-3.1-flash-lite",
+    temperature=0
+)
+
+search_tool = TavilySearch(max_results=5)
+
+agent = create_agent(
+    model=llm,
+    tools=[search_tool],
+    system_prompt="Answer the user's questions using web search when needed."
+)
+
+response = agent.invoke(
+    {"messages": [{"role": "user", "content": "Recent election in the USA"}]},
+    config={"callbacks": [langfuse_handler]}
+)
+
+print(response["messages"][-1].content)
